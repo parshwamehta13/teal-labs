@@ -16,8 +16,11 @@ var json = (function () {
 
 
 var correct=0;  // variable to store number of correct attempts
+var time_spent = 0;
 var myMap = new Map (); // Map object where key is studentid and value is correct and incorrect questions
+var mySubMap = new Map(); // Map object for Subject Wise performance
 for (i=0;i<json.length;i++){
+  time_spent+=json[i].TimeTaken;
   if (json[i].Correct==1){
     correct+=1;
   }
@@ -40,8 +43,39 @@ for (i=0;i<json.length;i++){
     }
     myMap.set(json[i].StudentID,temp);
   }
+  var sub = (json[i].AssessmentItemId.length==28 ? json[i].AssessmentItemId.substring(1,3) : json[i].AssessmentItemId.substring(1,4));
+  if (mySubMap.has(sub)){
+    if (json[i].Correct==1){
+      var temp = mySubMap.get(sub);
+      temp.correct +=1;
+    }else{
+      var temp = mySubMap.get(sub);
+      temp.incorrect +=1; 
+    }
+    mySubMap.set(sub,temp);
+  }else{
+    var temp = {"correct":0,"incorrect":0};
+    if (json[i].Correct==1){
+      temp.correct+=1;
+    }else{
+      temp.incorrect+=1;
+    }
+    mySubMap.set(sub,temp);  
+  }
 }
 
+//console.log(mySubMap);
+//console.log(json[1].AssessmentItemId.length);
+var student_analysis = new Array();
+for (var [key, value] of myMap) {
+  student_analysis.push({'id':key,'correct':value.correct,'incorrect':value.incorrect});
+}
+
+var subject_analysis = new Array();
+for (var [key, value] of mySubMap){
+  subject_analysis.push({'sub':key,'correct':value.correct,'incorrect':value.incorrect});
+}
+//console.log(student_analysis);
 
 generateDoughnut(correct,json.length-correct,"#doughnutchart");
 
@@ -87,8 +121,11 @@ app.controller('myCtrl',function($scope){
   $scope.number_students = myMap.size;
   $scope.correct_percentage = Math.round((correct/json.length) * 100);
   $scope.incorrect_percentage = 100 - $scope.correct_percentage;
-  $scope.student_analysis = myMap;
-  console.log($scope.student_analysis);
+  $scope.student_analysis = student_analysis; 
+  $scope.subject_analysis = subject_analysis;
+  // $scope.studentid_array = [];
+  $scope.average_time_spent = Math.round(time_spent/json.length);
+  //console.log($scope.student_analysis_id);
 });
     
   

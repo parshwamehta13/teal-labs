@@ -95,7 +95,62 @@
 				</div>
 			</div>
 		</div><!--/.row-->
-		
+
+		<h2> Student Wise Performance </h2>
+		<table class="table table-hover boxed">
+			<thead>
+				<tr>
+					<th>Student Id</th>
+					<th>Correct</th>
+					<th>Incorrect</th>
+					<th>Accuracy</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="student in student_analysis">
+					<td>{{student.id}}</td>
+					<td>{{student.correct}}</td>
+					<td>{{student.incorrect}}</td>
+					<!-- <td>{{100*student.correct/(student.incorrect+student.correct)  | number:0 }}%</td> -->
+					<td>
+						
+						  <div class="progress">
+						    <div class="progress-bar" role="progressbar" style="width:{{100*student.correct/(student.incorrect+student.correct)}}%">
+						      {{100*student.correct/(student.incorrect+student.correct)  | number:0 }}%
+						    </div>
+						  </div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<h2> Subject Wise Performance </h2>
+		<table class="table table-hover boxed">
+			<thead>
+				<tr>
+					<th>Subject</th>
+					<th>Correct</th>
+					<th>Incorrect</th>
+					<th>Accuracy</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="sub in subject_analysis">
+					<td>{{sub.sub}}</td>
+					<td>{{sub.correct}}</td>
+					<td>{{sub.incorrect}}</td>
+					<td>
+						
+						  <div class="progress">
+						    <div class="progress-bar" role="progressbar" style="width:{{100*sub.correct/(sub.incorrect+sub.correct)}}%">
+						      {{100*sub.correct/(sub.incorrect+sub.correct)  | number:0 }}%
+						    </div>
+						  </div>
+						
+					</td>
+				</tr>
+			</tbody>
+		</table>
 			</div><!--/.col-->
 		</div><!--/.row-->
 	</div>	<!--/.main-->
